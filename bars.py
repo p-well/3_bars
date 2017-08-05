@@ -11,19 +11,24 @@ def load_data(filepath):
         #print(deserialized_json)
 
 def get_biggest_bar(bars_data):
-    biggest_bar_seats = max(bars_data, key = lambda bars: bars.get('SeatsCount'))
-    #return big_bar_seats
-    print('Самый большой бар в Москве - это бар "{}". В нем {} мест и находится он по адресу {}'.
-        format(biggest_bar_seats.get('Name'),
-               biggest_bar_seats,
-               biggest_bar_seats.get('Address')
+    biggest_bar_data = max(bars_data, key = lambda bars: bars.get('SeatsCount'))
+    #print(biggest_bar_data)
+    print('Самый большой бар в Москве - это "{}". В нем {} мест и находится он\nпо адресу: {}.'.
+        format(biggest_bar_data.get('Name'),
+               biggest_bar_data.get('SeatsCount'),
+               biggest_bar_data.get('Address')
                )
         )
    
 
-def get_smallest_bar(data):
-    pass
-
+def get_smallest_bar(bars_data):
+    smallest_bar_data = min(bars_data, key = lambda bars: bars.get('SeatsCount'))
+    print('Самый маленький бар в Москве - это "{}". В нем {} мест и находится он\nпо адресу: {}.'.
+        format(smallest_bar_data.get('Name'),
+               smallest_bar_data.get('SeatsCount'),
+               smallest_bar_data.get('Address')
+               )
+        )
 
 def get_closest_bar(data, longitude, latitude):
     pass
@@ -31,8 +36,9 @@ def get_closest_bar(data, longitude, latitude):
 
 if __name__ == '__main__':
     moscow_bars = load_data('raw_json.json')
-    get_biggest_bar(moscow_bars)
+    get_biggest_bar(moscow_bars) 
 
+    get_smallest_bar(moscow_bars)
 
 
     # parser = argparse.ArgumentParser()
