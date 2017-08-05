@@ -7,16 +7,19 @@ def load_data(filepath):
         return None
     with open(filepath, 'r', encoding = 'cp1251') as raw_json_file:
         deserialized_json = json.load(raw_json_file)
-        #return deserialized_json
-        print(deserialized_json)
+        return deserialized_json
+        #print(deserialized_json)
 
 def get_biggest_bar(bars_data):
-    max_seats_number = 0
-    biggest_bar_name = str()
-    for bar_info in load_data(bars_data):
-        if bar_info.get('SeatsCount') > max_seats_number:
-            max_seats_number = bar_info.get('SeatsCount')
-    print(max_seats_number)
+    biggest_bar_seats = max(bars_data, key = lambda bars: bars.get('SeatsCount'))
+    #return big_bar_seats
+    print('Самый большой бар в Москве - это бар "{}". В нем {} мест и находится он по адресу {}'.
+        format(biggest_bar_seats.get('Name'),
+               biggest_bar_seats,
+               biggest_bar_seats.get('Address')
+               )
+        )
+   
 
 def get_smallest_bar(data):
     pass
@@ -27,10 +30,16 @@ def get_closest_bar(data, longitude, latitude):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-p','--path', required = True,
-                        help = 'Enter filepath file')
-    namespace = parser.parse_args()
-    #print(namespace)
-    if namespace.path:
-        load_data(namespace.path)
+    moscow_bars = load_data('raw_json.json')
+    get_biggest_bar(moscow_bars)
+
+
+
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('-p','--path', required = True,
+    #                     help = 'Enter filepath file')
+    # namespace = parser.parse_args()
+    # #print(namespace)
+    # if namespace.path:
+    #     #load_data(namespace.path)
+    #     get_biggest_bar(load_data(namespace.path))
