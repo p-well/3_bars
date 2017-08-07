@@ -3,6 +3,7 @@
 The program will help you to find the biggest and the smallest Moscow bars
 as well as the closest bar to you.
 
+
 # Quickstart
 
 To run the program use the following commands in CLI:
@@ -19,6 +20,8 @@ Filepath should be like:  C:\projects\devman\3_bars\moscow_bars.json
 To find the nearest bar user have to input his GPS coordinates: latitude and longitude respectively.
 
 3-rd party module 'geopy' is used. Run ```pip install -r requirements.txt``` to install the module.
+
+The input data is retrieved from Moscow City Government Open Data [data.mos.ru](https://data.mos.ru/) in JSON format.
 
 # Example of Script Launch
 
