@@ -1,7 +1,7 @@
 import json
 import os
 import argparse
-from math import sqrt
+from geopy.distance import vincenty
 
 def load_data(filepath):
     if not os.path.isfile(filepath):
@@ -24,33 +24,46 @@ def get_biggest_bar(bars_data):
 def get_smallest_bar(bars_data):
     smallest_bar_data = min(bars_data, key = lambda bars: bars.get('SeatsCount'))
 
-    print('\nОк. А самый маленький бар называется "{}" и в нем {} мест. Его адрес: {}.'.
+    print('\nА самый маленький бар называется "{}" и в нем {} мест. Его адрес: {}.'.
         format(smallest_bar_data.get('Name'),
                smallest_bar_data.get('SeatsCount'),
                smallest_bar_data.get('Address')
                )
         )
 
-def get_closest_bar(bars_data, longitude, latitude):
-    x_user = longitude
-    y_user = latitude
+def get_closest_bar(bars_data, latitude, longitude):
+    user_coordinates = (latitude, longitude)
     for bar_data in bars_data:
-        x_bar = float(bar_data.get('Longitude_WGS84'))
-        y_bar = float(bar_data.get('Latitude_WGS84'))
-        distance = sqrt((x_user - x_bar)**2 + (y_user - y_bar)**2)
-        bar_data['User_distance'] = distance
-    closest_bar_data = min(bars_data, key = lambda bar: bar.get('User_distance'))
-    print('Ближайший к вам бар - это {}. Его адрес: {}'.
-        format(closest_bar_data.get('Name'), closest_bar_data.get('Address')))    
+        bar_coordinates = (float(bar_data.get('Longitude_WGS84')), float(bar_data.get('Latitude_WGS84')))
+        distance = vincenty(user_coordinates, bar_coordinates).km
+        bar_data['user_distance'] = distance
+        print(distance)
+    closest_bar_data = min(bars_data, key = lambda bar: bar.get('user_distance'))
+    print(closest_bar_data)
+    print('Ближайший к вам бар - это {}. Его адрес: {}. До него {}'.
+        format(closest_bar_data.get('Name'), closest_bar_data.get('Address'), closest_bar_data.get('user_distance')))    
+
+# def get_closest_bar(bars_data, longitude, latitude):
+#     x_user = longitude
+#     y_user = latitude
+#     for bar_data in bars_data:
+#         x_bar = float(bar_data.get('Longitude_WGS84'))
+#         y_bar = float(bar_data.get('Latitude_WGS84'))
+#         distance = sqrt((x_user - x_bar)**2 + (y_user - y_bar)**2)
+#         bar_data['User_distance'] = distance
+#     closest_bar_data = min(bars_data, key = lambda bar: bar.get('User_distance'))
+#     print('Ближайший к вам бар - это {}. Его адрес: {}'.
+#         format(closest_bar_data.get('Name'), closest_bar_data.get('Address')))    
 
 
 if __name__ == '__main__':
     #load_data('raw_json.json')
+
     moscow_bars = load_data('raw_json.json')
     get_biggest_bar(moscow_bars) 
     get_smallest_bar(moscow_bars)
-    user_longitude = float(input("\n\nEnter your longitude:"))
     user_latitude = float(input("Enter your latitude:"))
+    user_longitude = float(input("\n\nEnter your longitude:"))
     get_closest_bar(moscow_bars, user_longitude, user_latitude)
 
     # parser = argparse.ArgumentParser()
@@ -61,3 +74,4 @@ if __name__ == '__main__':
     # if namespace.path:
     #     #load_data(namespace.path)
     #     get_biggest_bar(load_data(namespace.path))
+#         y_bar = float(bar_data.get('Latitude_WGS84'))
