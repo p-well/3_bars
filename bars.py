@@ -9,11 +9,9 @@ def load_data(filepath):
     with open(filepath, 'r', encoding = 'cp1251') as raw_json_file:
         deserialized_json = json.load(raw_json_file)
         return deserialized_json
-        #print(deserialized_json)
 
 def get_biggest_bar(bars_data):
     biggest_bar_data = max(bars_data, key = lambda bars: bars.get('SeatsCount'))
-
     print('\nСамый большой бар в Москве - это "{}". В нем {} мест и находится он\nпо адресу: {}.'.
         format(biggest_bar_data.get('Name'),
                biggest_bar_data.get('SeatsCount'),
@@ -23,8 +21,7 @@ def get_biggest_bar(bars_data):
 
 def get_smallest_bar(bars_data):
     smallest_bar_data = min(bars_data, key = lambda bars: bars.get('SeatsCount'))
-
-    print('\nА самый маленький бар называется "{}" и в нем {} мест. Его адрес: {}.'.
+    print('А самый маленький бар называется "{}" и в нем {} мест. Его адрес: {}.'.
         format(smallest_bar_data.get('Name'),
                smallest_bar_data.get('SeatsCount'),
                smallest_bar_data.get('Address')
@@ -34,44 +31,36 @@ def get_smallest_bar(bars_data):
 def get_closest_bar(bars_data, latitude, longitude):
     user_coordinates = (latitude, longitude)
     for bar_data in bars_data:
-        bar_coordinates = (float(bar_data.get('Longitude_WGS84')), float(bar_data.get('Latitude_WGS84')))
+        bar_coordinates = (float(bar_data.get('Latitude_WGS84')), float(bar_data.get('Longitude_WGS84')))
         distance = vincenty(user_coordinates, bar_coordinates).km
         bar_data['user_distance'] = distance
-        print(distance)
     closest_bar_data = min(bars_data, key = lambda bar: bar.get('user_distance'))
-    print(closest_bar_data)
-    print('Ближайший к вам бар - это {}. Его адрес: {}. До него {}'.
-        format(closest_bar_data.get('Name'), closest_bar_data.get('Address'), closest_bar_data.get('user_distance')))    
-
-# def get_closest_bar(bars_data, longitude, latitude):
-#     x_user = longitude
-#     y_user = latitude
-#     for bar_data in bars_data:
-#         x_bar = float(bar_data.get('Longitude_WGS84'))
-#         y_bar = float(bar_data.get('Latitude_WGS84'))
-#         distance = sqrt((x_user - x_bar)**2 + (y_user - y_bar)**2)
-#         bar_data['User_distance'] = distance
-#     closest_bar_data = min(bars_data, key = lambda bar: bar.get('User_distance'))
-#     print('Ближайший к вам бар - это {}. Его адрес: {}'.
-#         format(closest_bar_data.get('Name'), closest_bar_data.get('Address')))    
-
+    print('\nБлижайший бар - это {}. Его адрес: {}. До него {} километра'.
+        format(closest_bar_data.get('Name'),
+               closest_bar_data.get('Address'), 
+               round(closest_bar_data.get('user_distance'),1))
+        )    
 
 if __name__ == '__main__':
-    #load_data('raw_json.json')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p','--path', required = True,
+                        help = 'Enter path to file')
+    namespace = parser.parse_args()
+    if namespace.path:
+        
+        moscow_bars_data = load_data(namespace.path)
+        get_biggest_bar(moscow_bars_data)
+        get_smallest_bar(moscow_bars_data)
 
-    moscow_bars = load_data('raw_json.json')
-    get_biggest_bar(moscow_bars) 
-    get_smallest_bar(moscow_bars)
-    user_latitude = float(input("Enter your latitude:"))
-    user_longitude = float(input("\n\nEnter your longitude:"))
-    get_closest_bar(moscow_bars, user_longitude, user_latitude)
+        print('''\nОк. Давай теперь найдем ближайший бар! Нужно ввести свои координаты -
+широту и долготу. Например: 55.753215 и 37.622504.''')
+        while True:
+            try:
+                user_latitude = float(input("\nШирота:"))
+                user_longitude = float(input("Долгота:"))
+                break
+            except ValueError:
+                print('\nТы ввел что-то не то, попробуй еще раз.')   
+        get_closest_bar(moscow_bars_data, user_latitude, user_longitude)
 
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('-p','--path', required = True,
-    #                     help = 'Enter filepath file')
-    # namespace = parser.parse_args()
-    # #print(namespace)
-    # if namespace.path:
-    #     #load_data(namespace.path)
-    #     get_biggest_bar(load_data(namespace.path))
-#         y_bar = float(bar_data.get('Latitude_WGS84'))
+    
