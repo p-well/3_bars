@@ -20,7 +20,7 @@ To find the nearest bar user have to input his GPS coordinates: latitude and lon
 
 3-rd party module 'geopy' is used. Run ```pip install -r requirements.txt``` to install the module.
 
-# Example of script launch
+# Example of Script Launch
 
 ```
 Самый большой бар в Москве - это "Спорт бар «Красная машина»". В нем 450 мест и находится он
