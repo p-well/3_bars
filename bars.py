@@ -35,7 +35,7 @@ def get_closest_bar(bars_data, latitude, longitude):
         distance = vincenty(user_coordinates, bar_coordinates).km
         bar_data['user_distance'] = distance
     closest_bar_data = min(bars_data, key = lambda bar: bar.get('user_distance'))
-    print('\nБлижайший бар - это {}. Его адрес: {}. До него {} километра'.
+    print('\nБлижайший бар - это {}. Его адрес: {}. До него {} километра.'.
         format(closest_bar_data.get('Name'),
                closest_bar_data.get('Address'), 
                round(closest_bar_data.get('user_distance'),1))
