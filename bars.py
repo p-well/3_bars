@@ -44,18 +44,15 @@ if __name__ == '__main__':
     parser.add_argument('-p','--path', required = True,
                         help = 'Enter path to file')
     namespace = parser.parse_args()
-    if namespace.path:
-        
-        moscow_bars_data = load_data(namespace.path)
-        get_biggest_bar(moscow_bars_data)
-        get_smallest_bar(moscow_bars_data)
-
+    moscow_bars_data = load_data(namespace.path)
+    get_biggest_bar(moscow_bars_data)
+    get_smallest_bar(moscow_bars_data)
         print('''\nОк. Давай теперь найдем ближайший бар! Нужно ввести свои координаты -
 широту и долготу. Например: 55.753215 и 37.622504.''')
-        try:
-            user_latitude = float(input("\nШирота:"))
-            user_longitude = float(input("Долгота:"))
-            break
-        except ValueError:
-            print('\nТы ввел что-то не то, попробуй еще раз.')   
-        get_closest_bar(moscow_bars_data, user_latitude, user_longitude)
+    try:
+        user_latitude = float(input("\nШирота:"))
+        user_longitude = float(input("Долгота:"))
+        
+    except ValueError:
+        print('\nТы ввел что-то не то, попробуй еще раз.')   
+    get_closest_bar(moscow_bars_data, user_latitude, user_longitude)
