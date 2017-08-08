@@ -4,8 +4,6 @@ import argparse
 from geopy.distance import vincenty
 
 def load_data(filepath):
-    if not os.path.isfile(filepath):
-        return None
     with open(filepath, 'r', encoding = 'cp1251') as raw_json_file:
         deserialized_json = json.load(raw_json_file)
         return deserialized_json
@@ -54,13 +52,10 @@ if __name__ == '__main__':
 
         print('''\nОк. Давай теперь найдем ближайший бар! Нужно ввести свои координаты -
 широту и долготу. Например: 55.753215 и 37.622504.''')
-        while True:
-            try:
-                user_latitude = float(input("\nШирота:"))
-                user_longitude = float(input("Долгота:"))
-                break
-            except ValueError:
-                print('\nТы ввел что-то не то, попробуй еще раз.')   
+        try:
+            user_latitude = float(input("\nШирота:"))
+            user_longitude = float(input("Долгота:"))
+            break
+        except ValueError:
+            print('\nТы ввел что-то не то, попробуй еще раз.')   
         get_closest_bar(moscow_bars_data, user_latitude, user_longitude)
-
-    
