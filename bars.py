@@ -25,8 +25,7 @@ def get_closest_bar(bars_data, latitude, longitude):
         distance = sqrt((x_bar - x_user)**2 + (y_bar - y_user)**2)
         bar_data['user_distance'] = distance
     closest_bar_data = min(bars_data, key = lambda bar: bar.get('user_distance'))
-    print('\nБлижайший бар - это {}. Его адрес: {}.'.
-        format(closest_bar_data.get('Name'), closest_bar_data.get('Address')))
+    return closest_bar_data.get('Name'), closest_bar_data.get('Address')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -45,12 +44,15 @@ if __name__ == '__main__':
                get_smallest_bar(moscow_bars_data)[1],
                get_smallest_bar(moscow_bars_data)[2]))
 
-
     print('''\nОк. Давай теперь найдем ближайший бар! Нужно ввести свои координаты -
 широту и долготу. Например: 55.753215 и 37.622504.''')
+    
     try:
         user_latitude = float(input("\nШирота:"))
         user_longitude = float(input("Долгота:"))
-        get_closest_bar(moscow_bars_data, user_latitude, user_longitude)
+        print('\nБлижайший бар - это {}. Его адрес: {}.'.
+            format(get_closest_bar(moscow_bars_data, user_latitude, user_longitude)[0],
+                   get_closest_bar(moscow_bars_data, user_latitude, user_longitude)[1]))
+    
     except ValueError as wrong_input_info:
         print(wrong_input_info)
